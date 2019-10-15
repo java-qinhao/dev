@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 public class UserService {
 	IndexService indexService;
 
-	public void setIndexService(IndexService indexService) {
+	public void setIndexServiceImpl(IndexService indexService) {
 		this.indexService = indexService;
-		System.out.println("注入了");
+		System.out.println(indexService);
 	}
 }

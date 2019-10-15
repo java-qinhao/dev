@@ -13,7 +13,7 @@ public class MyBeanFactroyPostProcessor implements BeanFactoryPostProcessor {
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		GenericBeanDefinition userService = (GenericBeanDefinition)beanFactory.getBeanDefinition("userService");
-		userService.setAutowireMode(2);
-		System.out.println(userService.getAutowireMode());
+		//注入模型改为byname
+		userService.setAutowireMode(1);
 	}
 }
