@@ -62,7 +62,11 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigApplicationContext() {
+		//初始化开天辟地的5个bd
+		//如非常重要的configrationClassPostProcessor
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+		//实例化扫描类，主要是为了提供给程序员扩展spring的扫描机制，继承此类自定义FILTER
+		//spring内部的扫描是自己再new了一个scanner
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
@@ -83,7 +87,11 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * e.g. {@link Configuration @Configuration} classes
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... annotatedClasses) {
+		//1.调用父类的构造方法初始化beanFactory = new DefaultListableBeanFactory();
+		//2.初始化开天辟地的5个bd
+		//3.初始化一个scanner 提供给程序员使用
 		this();
+		//注册我们的配置类到bdMap中
 		register(annotatedClasses);
 		refresh();
 	}
