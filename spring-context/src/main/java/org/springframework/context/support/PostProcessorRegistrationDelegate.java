@@ -56,14 +56,18 @@ final class PostProcessorRegistrationDelegate {
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
-		//首先执行BeanDefinitionRegistryPostProcessors类型的后置处理器 spring内部只有一个 configuratinClassPostProcessor
+		//此集合为已经处理过的后置处理器的集合
 		Set<String> processedBeans = new HashSet<>();
-
+		//首先执行BeanDefinitionRegistryPostProcessors类型的后置处理器 spring内部只有一个 configuratinClassPostProcessor
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
+			//标准的beanFactoryPostProcessors后置处理器集合
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
+			//所有的后置处理器
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
-
+			//beanFactoryPostProcessors表示程序员调用api添加的类
+			//如果为BeanDefinitionRegistryPostProcessor类型则直接执行
+			//如果为beanFactoryPostProcessors类型则添加到regularPostProcessors中
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =
@@ -80,6 +84,7 @@ final class PostProcessorRegistrationDelegate {
 			// uninitialized to let the bean factory post-processors apply to them!
 			// Separate between BeanDefinitionRegistryPostProcessors that implement
 			// PriorityOrdered, Ordered, and the rest.
+			//当前策略模式需要执行的BeanDefinitionRegistryPostProcessor后置处理器
 			List<BeanDefinitionRegistryPostProcessor> currentRegistryProcessors = new ArrayList<>();
 
 			// First, invoke the BeanDefinitionRegistryPostProcessors that implement PriorityOrdered.
@@ -133,6 +138,7 @@ final class PostProcessorRegistrationDelegate {
 			// Now, invoke the postProcessBeanFactory callback of all processors handled so far.
 			//执行BeanDefinitionRegistryPostProcessors类型的后置处理器父类postProcessBeanFactory的方法
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
+			//执行通过api添加的BeanFactoryPostProcessor类型的后置处理器
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
 		}
 
