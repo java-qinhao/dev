@@ -137,6 +137,8 @@ final class PostProcessorRegistrationDelegate {
 
 			// Now, invoke the postProcessBeanFactory callback of all processors handled so far.
 			//执行BeanDefinitionRegistryPostProcessors类型的后置处理器父类postProcessBeanFactory的方法
+			//主要是对我们的配置类进行cglb代理
+			//保证@Bean是单例
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
 			//执行通过api添加的BeanFactoryPostProcessor类型的后置处理器
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);

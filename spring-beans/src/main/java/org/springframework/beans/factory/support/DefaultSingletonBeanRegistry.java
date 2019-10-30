@@ -174,6 +174,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+		//首先从从单例池中拿bean如果拿到了直接返回，如果拿不到，就判断当前类是否正在创建，
+		//如果此类没有正在创建，则直接返回null
+		//如果正在创建，则从earlySingletonObjects中拿，如果能拿到 则直接返回
+		//如果拿不到 则从singletonFactories中拿，拿到以后把类放进earlySingletonObjects中，然后从singletonFactories移除
+		//此处就是spring中的3级缓存（一级缓存：singletonObjects 二级缓存：earlySingletonObjects 三级缓存：singletonFactories）
+		//这样做的目的是为了解决循环依赖的问题
 		Object singletonObject = this.singletonObjects.get(beanName);
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			synchronized (this.singletonObjects) {
@@ -212,6 +218,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				if (logger.isDebugEnabled()) {
 					logger.debug("Creating shared instance of singleton bean '" + beanName + "'");
 				}
+				//将beanName添加到singletonsCurrentlyInCreation set集合中，表示当前bean正在创建
 				beforeSingletonCreation(beanName);
 				boolean newSingleton = false;
 				boolean recordSuppressedExceptions = (this.suppressedExceptions == null);
